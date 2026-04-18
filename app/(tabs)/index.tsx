@@ -1,45 +1,51 @@
 import { ScrollView, Text, View, TouchableOpacity } from "react-native";
-
+import { useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
+import { useColors } from "@/hooks/use-colors";
 
-/**
- * Home Screen - NativeWind Example
- *
- * This template uses NativeWind (Tailwind CSS for React Native).
- * You can use familiar Tailwind classes directly in className props.
- *
- * Key patterns:
- * - Use `className` instead of `style` for most styling
- * - Theme colors: use tokens directly (bg-background, text-foreground, bg-primary, etc.); no dark: prefix needed
- * - Responsive: standard Tailwind breakpoints work on web
- * - Custom colors defined in tailwind.config.js
- */
 export default function HomeScreen() {
+  const router = useRouter();
+  const colors = useColors();
+
   return (
     <ScreenContainer className="p-6">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="flex-1 gap-8">
+        <View className="flex-1 gap-8 justify-center">
           {/* Hero Section */}
-          <View className="items-center gap-2">
-            <Text className="text-4xl font-bold text-foreground">Welcome</Text>
+          <View className="items-center gap-4">
+            <Text className="text-5xl font-bold text-foreground">Line Tower Wars</Text>
             <Text className="text-base text-muted text-center">
-              Edit app/(tabs)/index.tsx to get started
+              Defend your base from waves of enemies
             </Text>
           </View>
 
-          {/* Example Card */}
-          <View className="w-full max-w-sm self-center bg-surface rounded-2xl p-6 shadow-sm border border-border">
-            <Text className="text-lg font-semibold text-foreground mb-2">NativeWind Ready</Text>
-            <Text className="text-sm text-muted leading-relaxed">
-              Use Tailwind CSS classes directly in your React Native components.
-            </Text>
-          </View>
-
-          {/* Example Button */}
-          <View className="items-center">
-            <TouchableOpacity className="bg-primary px-6 py-3 rounded-full active:opacity-80">
-              <Text className="text-background font-semibold">Get Started</Text>
+          {/* Start Game Button */}
+          <View className="items-center gap-4">
+            <TouchableOpacity
+              onPress={() => router.push("/game")}
+              style={{
+                backgroundColor: colors.primary,
+                paddingHorizontal: 32,
+                paddingVertical: 16,
+                borderRadius: 12,
+              }}
+            >
+              <Text className="text-white font-bold text-lg">Start Game</Text>
             </TouchableOpacity>
+          </View>
+
+          {/* Game Info */}
+          <View className="w-full bg-surface rounded-2xl p-6 border border-border gap-3">
+            <Text className="text-lg font-semibold text-foreground">How to Play</Text>
+            <Text className="text-sm text-muted leading-relaxed">
+              • Place towers to defend against creeps
+            </Text>
+            <Text className="text-sm text-muted leading-relaxed">
+              • Earn gold by defeating enemies
+            </Text>
+            <Text className="text-sm text-muted leading-relaxed">
+              • Survive all waves to win
+            </Text>
           </View>
         </View>
       </ScrollView>
