@@ -77,3 +77,41 @@
 - [ ] Tower upgrades
 - [ ] Difficulty levels
 - [ ] Daily challenges
+
+## Audio & Sound Effects
+- [x] Add background music system
+- [x] Add tower placement sound
+- [x] Add tower attack sounds
+- [x] Add creep death sound
+- [x] Add wave complete sound
+- [x] Add game over sound
+- [x] Implement sound toggle in settings
+
+## Tower Upgrade System
+- [x] Create tower upgrade data structures
+- [ ] Implement upgrade UI
+- [x] Add damage upgrade
+- [x] Add range upgrade
+- [x] Add fire rate upgrade
+- [ ] Update game engine to handle upgrades
+
+## Difficulty Levels
+- [x] Add Easy difficulty (slower creeps, more gold)
+- [x] Add Normal difficulty (default)
+- [x] Add Hard difficulty (faster creeps, less gold)
+- [x] Create difficulty selector UI
+- [x] Adjust wave scaling based on difficulty
+
+## Map Variations
+- [x] Create Map 1 (original path)
+- [x] Create Map 2 (winding path)
+- [x] Create Map 3 (multiple paths)
+- [x] Implement map selector UI
+- [ ] Update pathfinding for different maps
+
+## GitHub Workflow
+- [ ] Create GitHub Actions workflow file
+- [ ] Set up Android build configuration
+- [ ] Configure APK generation
+- [ ] Set up artifact storage
+- [ ] Test workflow on push
