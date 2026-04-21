@@ -7,6 +7,8 @@ import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
+import { Server as SocketServer } from "socket.io";
+import { handleMatchmaking } from "../game/matchmaking";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise((resolve) => {
@@ -77,8 +79,22 @@ async function startServer() {
     console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
 
+  const io = new SocketServer(server, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+      credentials: true,
+    },
+  });
+
+  io.on("connection", (socket) => {
+    console.log(`[socket] new connection: ${socket.id}`);
+    handleMatchmaking(socket, io);
+  });
+
   server.listen(port, () => {
     console.log(`[api] server listening on port ${port}`);
+    console.log(`[socket] socket.io server ready`);
   });
 }
 

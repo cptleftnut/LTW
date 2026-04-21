@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LTW Socket.io Test Client</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #log { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; margin-top: 10px; background: #f9f9f9; }
+        .state { font-family: monospace; white-space: pre; background: #eee; padding: 10px; margin-top: 10px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>LTW Socket.io Test Client</h1>
+    <div id="status">Status: Disconnected</div>
+    <br>
+    <button id="joinBtn">Join Queue</button>
+    <button id="buildBtn" disabled>Build Tower (50 Gold)</button>
+    
+    <h3>Game State:</h3>
+    <div id="state" class="state">No game active</div>
+
+    <h3>Logs:</h3>
+    <div id="log"></div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        const logDiv = document.getElementById('log');
+        const stateDiv = document.getElementById('state');
+        const statusDiv = document.getElementById('status');
+        const joinBtn = document.getElementById('joinBtn');
+        const buildBtn = document.getElementById('buildBtn');
+
+        function log(msg) {
+            const entry = document.createElement('div');
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        const playerId = 'player_' + Math.random().toString(36).substr(2, 5);
+        log(`My Player ID: ${playerId}`);
+
+        const socket = io("http://localhost:3000");
+
+        socket.on('connect', () => {
+            statusDiv.textContent = 'Status: Connected';
+            log('Connected to server');
+        });
+
+        socket.on('disconnect', () => {
+            statusDiv.textContent = 'Status: Disconnected';
+            log('Disconnected from server');
+        });
+
+        socket.on('match_found', (data) => {
+            log(`Match Found! ID: ${data.matchId}`);
+            log(`Players: ${data.players.join(', ')}`);
+            buildBtn.disabled = false;
+            joinBtn.disabled = true;
+        });
+
+        socket.on('state', (state) => {
+            stateDiv.textContent = JSON.stringify(state, null, 2);
+        });
+
+        socket.on('game_over', (data) => {
+            log(`GAME OVER! Winner: ${data.winnerId}`);
+            buildBtn.disabled = true;
+            joinBtn.disabled = false;
+        });
+
+        joinBtn.onclick = () => {
+            log('Joining queue...');
+            socket.emit('join_queue', { id: playerId });
+        };
+
+        buildBtn.onclick = () => {
+            log('Sending build command');
+            socket.emit('input', { type: 'build' });
+        };
+    </script>
+</body>
+</html>

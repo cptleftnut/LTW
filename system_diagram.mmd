@@ -1,0 +1,26 @@
+graph TD
+    Client["CLIENT (Pixi / UI)"] --> Socket["Socket.io Layer (Real-time input)"]
+    Socket --> GameServer["Game Server (Authoritative)"]
+    
+    subgraph GameServerCore [Game Server Core]
+        Matchmaking["Matchmaking"]
+        TickEngine["Tick Engine"]
+        InputHandler["Input Handler"]
+    end
+    
+    GameServer --> Matchmaking
+    GameServer --> TickEngine
+    GameServer --> InputHandler
+    
+    Matchmaking --> Redis["REDIS LAYER (Event Bus + Job Queue)"]
+    TickEngine --> Redis
+    InputHandler --> Redis
+    
+    Redis --> WorkerEconomy["Workers (Economy)"]
+    Redis --> WorkerAntiCheat["Workers (Anti-Cheat)"]
+    
+    WorkerEconomy --> Postgres["POSTGRES (Source of Truth)"]
+    WorkerAntiCheat --> Postgres
+    
+    Postgres --> Observability["OBSERVABILITY (Logs / Metrics)"]
+    Observability --> Orchestration["ORCHESTRATION (Control Layer)"]

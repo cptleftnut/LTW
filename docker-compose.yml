@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ltw
+    ports:
+      - "5432:5432"
+
+  server:
+    build: .
+    command: pnpm dev:server
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/ltw
+    depends_on:
+      - redis
+      - postgres
+
+  worker:
+    build: .
+    command: pnpm dev:worker
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/ltw
+    depends_on:
+      - redis
+      - postgres
